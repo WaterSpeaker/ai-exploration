@@ -1,0 +1,142 @@
+---
+import type { Resume } from '../data/resume';
+
+interface Props {
+  resume: Resume;
+}
+
+const { resume } = Astro.props;
+---
+
+<div class="resume">
+  <div class="resume__block">
+    <h4 class="resume__label">教育背景</h4>
+    <ul class="resume__list">
+      {
+        resume.education.map((item) => (
+          <li class="resume__row">
+            <span class="resume__row-title">{item.title}</span>
+            <span class="resume__row-period">{item.period}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="resume__block">
+    <h4 class="resume__label">工作经验</h4>
+    <ul class="resume__list">
+      {
+        resume.work.map((item) => (
+          <li class="resume__row">
+            <span class="resume__row-title">{item.title}</span>
+            <span class="resume__row-period">{item.period}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="resume__block">
+    <h4 class="resume__label">我是一个什么样的设计师</h4>
+    <ul class="resume__list">
+      {
+        resume.designerTraits.map((item) => (
+          <li class="resume__row">
+            <span class="resume__row-title">{item}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="resume__block">
+    <h4 class="resume__label">讲学与荣誉</h4>
+    <ul class="resume__highlights">
+      {resume.highlights.map((item) => <li class="tag">{item}</li>)}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .resume {
+    display: grid;
+    gap: 36px;
+  }
+
+  .resume__block {
+    display: grid;
+    gap: var(--spacing-12);
+  }
+
+  .resume__label {
+    margin: 0;
+    font-family: var(--font-caption);
+    font-size: var(--text-caption);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+
+  .resume__list {
+    list-style: none;
+    margin: 0;
+    padding: var(--spacing-20);
+    display: grid;
+    gap: var(--spacing-12);
+    background: var(--surface-pumice-canvas);
+    border-radius: var(--radius-medium);
+  }
+
+  .resume__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-8) var(--spacing-16);
+    opacity: 0.75;
+  }
+
+  .resume__row-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: 21.7px;
+  }
+
+  .resume__row-period {
+    flex: 0 0 auto;
+    font-family: var(--font-caption);
+    font-size: var(--text-caption);
+    font-weight: var(--font-weight-medium);
+    line-height: 18.6px;
+    white-space: nowrap;
+  }
+
+  /* Figma: honors block is taller than its content — empty space before CTA */
+  .resume__block:last-child {
+    min-height: 80px;
+    align-content: start;
+  }
+
+  .resume__highlights {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--spacing-8);
+  }
+
+  /* Figma tag frames are ~24.4px tall */
+  .resume__highlights .tag {
+    padding: 5px 10px;
+    line-height: 14.4px;
+    font-weight: var(--font-weight-regular);
+    white-space: nowrap;
+  }
+</style>

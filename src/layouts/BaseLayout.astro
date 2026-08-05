@@ -1,0 +1,71 @@
+---
+import '../styles/global.css';
+import AccessGate from '../components/AccessGate.astro';
+import { getSiteAudience } from '../lib/audience';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Chen's AI Exploration",
+  description = '在工作内外的时间里，探索 AI 时代的各种可能性。',
+} = Astro.props;
+
+const needsAccessGate = getSiteAudience() === 'external';
+const ACCESS_KEY = 'ai-exploration-access-v1';
+const faviconHref = withBase('/favicon.svg');
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href={faviconHref} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+    <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+    {
+      needsAccessGate && (
+        <script is:inline define:vars={{ ACCESS_KEY }}>
+          try {
+            if (sessionStorage.getItem(ACCESS_KEY) === '1') {
+              document.documentElement.dataset.unlocked = 'true';
+            }
+          } catch {}
+        </script>
+      )
+    }
+  </head>
+  <body class:list={[{ 'has-access-gate': needsAccessGate }]}>
+    {needsAccessGate && <AccessGate />}
+    <div class="site-root" data-site-root>
+      <slot />
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  html:not([data-unlocked]) body.has-access-gate {
+    overflow: hidden;
+  }
+
+  html:not([data-unlocked]) body.has-access-gate [data-site-root] {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  html[data-unlocked] [data-access-gate] {
+    display: none !important;
+  }
+</style>

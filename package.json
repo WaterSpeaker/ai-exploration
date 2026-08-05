@@ -1,0 +1,21 @@
+{
+  "name": "ai-exploration",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "dev:internal": "PUBLIC_SITE_AUDIENCE=internal astro dev",
+    "dev:external": "PUBLIC_SITE_AUDIENCE=external astro dev",
+    "build": "rm -rf dist && PUBLIC_SITE_AUDIENCE=external astro build",
+    "build:internal": "rm -rf dist && PUBLIC_SITE_AUDIENCE=internal astro build",
+    "build:external": "rm -rf dist && PUBLIC_SITE_AUDIENCE=external astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^7.1.1"
+  }
+}

@@ -1,0 +1,38 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+import { getSiteAudience } from '../../lib/audience';
+import { withBaseHtml } from '../../lib/paths';
+import { workDocPages, getWorkDoc } from '../../data/workDocs';
+
+/** Work HTML docs are the external delivery; internal build keeps Lark-only chips. */
+export function getStaticPaths() {
+  if (getSiteAudience() === 'internal') {
+    return [];
+  }
+  return workDocPages.map((page) => ({
+    params: { slug: page.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const page = getWorkDoc(slug!);
+if (!page) {
+  throw new Error(`Unknown work doc: ${slug}`);
+}
+
+const modules = import.meta.glob('../../content/work-docs/*.html', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+const rawHtml = modules[`../../content/work-docs/${page.slug}.html`];
+if (!rawHtml) {
+  throw new Error(`Missing HTML content for ${page.slug}`);
+}
+const html = withBaseHtml(rawHtml);
+---
+
+<DocLayout title={page.title} description={page.description}>
+  <div class="doc-content" set:html={html} />
+</DocLayout>

@@ -1,0 +1,47 @@
+/**
+ * PP Neue Corp — self-hosted (Pangram Pangram personal-use files).
+ * System installs expose each cut as its own family name.
+ */
+@font-face {
+  font-family: 'PP Neue Corp Compact';
+  src:
+    local('PP Neue Corp Compact Medium'),
+    local('PPNeueCorp-CompactMedium'),
+    url('/fonts/PPNeueCorp-CompactMedium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Corp Compact';
+  src:
+    local('PP Neue Corp Compact Ultrabold'),
+    local('PPNeueCorp-CompactUltrabold'),
+    url('/fonts/PPNeueCorp-CompactUltrabold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Corp';
+  src:
+    local('PP Neue Corp Normal Medium'),
+    local('PPNeueCorp-NormalMedium'),
+    url('/fonts/PPNeueCorp-NormalMedium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Corp';
+  src:
+    local('PP Neue Corp Compact Ultrabold'),
+    local('PPNeueCorp-CompactUltrabold'),
+    url('/fonts/PPNeueCorp-CompactUltrabold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}

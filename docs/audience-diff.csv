@@ -1,0 +1,18 @@
+id,surface,diff_type,internal,external,status,code_path,notes
+work.tag.chatbot,work chip,replace,https://bytedance.my.larkoffice.com/docx/WzyhddhbWosJdOxsfpjm8pVYymf,/work/ai-shopping-chatbot-design,implemented,src/data/work.ts,对内飞书对外HTML
+work.tag.opportunities,work chip,replace,https://bytedance.my.larkoffice.com/docx/DeN2ddKnJoNZihx0iKSmq7TfyXf,/work/ai-design-opportunities,implemented,src/data/work.ts,对内飞书对外HTML
+work.tag.tts-lang,work chip,replace,https://bytedance.my.larkoffice.com/docx/ALd7d70qJoOeMZx5pDrmsDBzyze,/work/tts-ai-design-language,implemented,src/data/work.ts,对内飞书对外HTML
+doc.ai-shopping-chatbot-design,work doc,external_only,不产出站内页,现有 HTML（待脱敏审核）,implemented,src/pages/work/[slug].astro,internal build 无 /work/*
+doc.ai-design-opportunities,work doc,external_only,不产出站内页,现有 HTML（待脱敏审核）,implemented,src/pages/work/[slug].astro,后续审核脱敏
+doc.tts-ai-design-language,work doc,external_only,不产出站内页,现有 HTML（待脱敏审核）,implemented,src/pages/work/[slug].astro,后续审核脱敏
+url.lark.about-me,About CTA,rewrite,https://bytedance.larkoffice.com/docx/YZljdzO2HorQqqxqbduc6SnanVh,/chen-wang-resume.pdf,implemented,src/data/about.ts,源文件：王琛_简历.pdf
+url.aime.event-bot,Vibe card,hide,https://edb246c054dc.aime-app.bytedance.net/,保留卡片无链接,implemented,src/data/vibe.ts,对外去链接
+url.lark.design-weekly,Vibe card,hide,https://bytedance.larkoffice.com/docx/Sa48di26BoBaPsxpy6AclSvNnFc,保留卡片无链接,implemented,src/data/vibe.ts,对外去链接
+url.lark.vibe-config,Workflow CTA,hide,售后域 vibe coding 0-1 配置指南,隐藏按钮,implemented,src/data/workflow.ts,对外隐藏
+url.skills.tts-design,Workflow CTA,hide,TTS design skill,隐藏按钮,implemented,src/data/workflow.ts,对外隐藏
+contact.lead,Contact copy,rewrite,在飞书上找到我,微信或邮件联系我,implemented,src/data/contact.ts,
+url.feishu.chat-default,Contact,hide,飞书 pill 王琛,不展示,implemented,ContactForm.astro,对外隐藏飞书
+contact.wechat,Contact,external_only,—,点击复制 water_speaker,implemented,src/data/contact.ts,
+contact.email,Contact,external_only,—,点击复制 suvi.wang.1993@gmail.com,implemented,src/data/contact.ts,
+access.gate,chrome,external_only,无门禁,密码页默认1234（session记住）,implemented,src/components/AccessGate.astro,软校验非加密安全
+vibe.proj.personal-site,Vibe card,same,https://waterspeaker.github.io/AboutMe/,同左,observed,src/data/vibe.ts,已是公开链接

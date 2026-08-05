@@ -1,0 +1,177 @@
+---
+import type { TimelineSectionMeta } from '../data/timeline';
+
+interface Props {
+  sections: TimelineSectionMeta[];
+}
+
+const { sections } = Astro.props;
+---
+
+<nav class="timeline-nav" aria-label="页面章节" data-timeline-nav>
+  <ol class="timeline-nav__list">
+    {
+      sections.map((section) => (
+        <li>
+          <a
+            href={`#${section.id}`}
+            class="timeline-nav__link"
+            data-section-id={section.id}
+          >
+            <span class="timeline-nav__index">{section.index}</span>
+            <span class="timeline-nav__label">{section.label}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<script>
+  function initTimelineNav() {
+    const nav = document.querySelector('[data-timeline-nav]');
+    if (!nav) return;
+
+    const links = Array.from(
+      nav.querySelectorAll<HTMLAnchorElement>('.timeline-nav__link'),
+    );
+    const sectionIds = links
+      .map((link) => link.dataset.sectionId)
+      .filter((id): id is string => Boolean(id));
+    const nodes = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    const setActive = (id: string) => {
+      links.forEach((link) => {
+        const active = link.dataset.sectionId === id;
+        link.classList.toggle('is-active', active);
+        if (active) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      });
+    };
+
+    if (sectionIds[0]) setActive(sectionIds[0]);
+
+    if (nodes.length > 0) {
+      const sectionObserver = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+          if (visible[0]?.target.id) setActive(visible[0].target.id);
+        },
+        {
+          rootMargin: '-20% 0px -55% 0px',
+          threshold: [0.1, 0.25, 0.5],
+        },
+      );
+      nodes.forEach((node) => sectionObserver.observe(node));
+    }
+
+    const revealables = document.querySelectorAll<HTMLElement>('[data-reveal]');
+    if (revealables.length === 0) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) {
+      revealables.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -6% 0px' },
+    );
+
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    revealables.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      // Already on screen — mark visible before hiding others (avoids FOUC)
+      if (rect.top < vh * 0.94 && rect.bottom > vh * 0.06) {
+        el.classList.add('is-visible');
+      } else {
+        revealObserver.observe(el);
+      }
+    });
+
+    document.documentElement.classList.add('reveal-ready');
+  }
+
+  initTimelineNav();
+  document.addEventListener('astro:page-load', initTimelineNav);
+</script>
+
+<style>
+  .timeline-nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--spacing-4);
+  }
+
+  .timeline-nav__link {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: var(--spacing-12);
+    align-items: baseline;
+    padding: var(--spacing-8) var(--spacing-12);
+    border-radius: var(--radius-pills);
+    color: var(--color-obsidian);
+    text-decoration: none;
+    font-family: 'PP Neue Corp', var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    font-synthesis: none;
+    opacity: 0.55;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+  }
+
+  .timeline-nav__link:hover,
+  .timeline-nav__link.is-active {
+    opacity: 1;
+    color: var(--color-obsidian);
+  }
+
+  .timeline-nav__link.is-active {
+    background: var(--surface-limestone);
+  }
+
+  .timeline-nav__index {
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: normal;
+    color: var(--color-ember);
+  }
+
+  .timeline-nav__label {
+    line-height: 1.3;
+  }
+
+  @media (max-width: 960px) {
+    .timeline-nav__list {
+      display: flex;
+      gap: var(--spacing-4);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .timeline-nav__list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .timeline-nav__link {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: max-content;
+      padding: var(--spacing-8) var(--spacing-12);
+    }
+  }
+</style>

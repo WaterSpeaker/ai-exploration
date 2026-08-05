@@ -1,0 +1,184 @@
+---
+/**
+ * Soft client-side gate for the external site.
+ * Not cryptographic security — password ships in the client bundle.
+ */
+const ACCESS_KEY = 'ai-exploration-access-v1';
+const PASSWORD =
+  (import.meta.env.PUBLIC_SITE_ACCESS_PASSWORD as string | undefined)?.trim() || '1234';
+---
+
+<div class="access-gate" data-access-gate aria-hidden="false">
+  <div class="access-gate__card">
+    <p class="access-gate__brand">Chen’s AI Exploration</p>
+    <h1 class="access-gate__title">输入访问密码</h1>
+    <p class="access-gate__lead">此站点需要密码后才能浏览</p>
+    <form class="access-gate__form" data-access-form novalidate>
+      <label class="access-gate__label" for="access-password">密码</label>
+      <input
+        id="access-password"
+        class="access-gate__input"
+        type="password"
+        name="password"
+        autocomplete="current-password"
+        inputmode="numeric"
+        required
+        autofocus
+        data-access-input
+      />
+      <p class="access-gate__error" data-access-error hidden>密码不正确，请重试</p>
+      <button type="submit" class="access-gate__submit">进入</button>
+    </form>
+  </div>
+</div>
+
+<script is:inline define:vars={{ ACCESS_KEY, PASSWORD }}>
+  (() => {
+    const root = document.documentElement;
+    const gate = document.querySelector('[data-access-gate]');
+    const form = document.querySelector('[data-access-form]');
+    const input = document.querySelector('[data-access-input]');
+    const error = document.querySelector('[data-access-error]');
+
+    const unlock = () => {
+      try {
+        sessionStorage.setItem(ACCESS_KEY, '1');
+      } catch {}
+      root.dataset.unlocked = 'true';
+      if (gate instanceof HTMLElement) {
+        gate.setAttribute('aria-hidden', 'true');
+        gate.hidden = true;
+      }
+    };
+
+    try {
+      if (sessionStorage.getItem(ACCESS_KEY) === '1') {
+        unlock();
+        return;
+      }
+    } catch {}
+
+    if (!(form instanceof HTMLFormElement) || !(input instanceof HTMLInputElement)) return;
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (input.value === PASSWORD) {
+        if (error instanceof HTMLElement) error.hidden = true;
+        unlock();
+        return;
+      }
+      if (error instanceof HTMLElement) error.hidden = false;
+      input.select();
+    });
+  })();
+</script>
+
+<style>
+  .access-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    padding: var(--spacing-24);
+    background: #000;
+    color: #fff;
+  }
+
+  .access-gate[hidden] {
+    display: none;
+  }
+
+  .access-gate__card {
+    width: min(100%, 380px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-12);
+  }
+
+  .access-gate__brand {
+    margin: 0;
+    font-family: var(--font-caption);
+    font-size: var(--text-caption);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.65;
+  }
+
+  .access-gate__title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: clamp(28px, 5vw, 36px);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.2;
+    letter-spacing: var(--tracking-heading);
+  }
+
+  .access-gate__lead {
+    margin: 0 0 var(--spacing-16);
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    font-weight: 300;
+    line-height: 1.5;
+    opacity: 0.7;
+  }
+
+  .access-gate__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-10);
+  }
+
+  .access-gate__label {
+    font-family: var(--font-caption);
+    font-size: var(--text-caption);
+    opacity: 0.7;
+  }
+
+  .access-gate__input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: var(--radius-pills);
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    outline: none;
+  }
+
+  .access-gate__input:focus {
+    border-color: rgba(255, 255, 255, 0.65);
+  }
+
+  .access-gate__error {
+    margin: 0;
+    font-family: var(--font-caption);
+    font-size: var(--text-caption);
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .access-gate__submit {
+    margin-top: var(--spacing-8);
+    padding: 14px 20px;
+    border: none;
+    border-radius: var(--radius-pills);
+    background: #fff;
+    color: #000;
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .access-gate__submit:hover {
+    opacity: 0.92;
+  }
+
+  .access-gate__submit:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+</style>

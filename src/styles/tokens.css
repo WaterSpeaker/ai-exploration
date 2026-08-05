@@ -1,0 +1,99 @@
+/**
+ * Caldera design tokens — sourced from Refero Styles
+ * https://styles.refero.design/style/fe8cdcf9-c850-4d52-be07-5ad269bf9ebf
+ */
+:root {
+  /* Colors */
+  --color-ember: #fc5000;
+  --color-plasma-violet: #524ae9;
+  --color-sulfur: #f5f28e;
+  --color-limestone: #f7f6f2;
+  --color-pumice: #e2e2df;
+  --color-obsidian: #070607;
+  --color-chalk: #ffffff;
+
+  /* Surfaces */
+  --surface-pumice-canvas: var(--color-pumice);
+  --surface-limestone: var(--color-limestone);
+  --surface-ember-feature: var(--color-ember);
+  --surface-plasma-hero: var(--color-plasma-violet);
+
+  /* Typography — Font Families
+     Latin: PP Neue Corp Compact (titles) + DM Sans (body)
+     中文：思源黑体 Noto Sans SC（标题与正文统一） */
+  --font-display: 'PP Neue Corp Compact', 'PP Neue Corp', 'Noto Sans SC',
+    'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-body: 'DM Sans', 'Noto Sans SC', 'Source Han Sans SC', 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+  --font-caption: 'DM Sans', 'Noto Sans SC', 'Source Han Sans SC', 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+
+  /* Typography — Scale */
+  --text-caption: 12px;
+  --leading-caption: 1.2;
+  --text-body-sm: 14px;
+  --leading-body-sm: 1.2;
+  --text-body: 16px;
+  --leading-body: 1.55;
+  --text-body-lg: 18px;
+  --text-subheading: 26px;
+  --leading-subheading: 1.2;
+  --text-heading-sm: 30px;
+  --leading-heading-sm: 1.5;
+  --text-heading: 32px;
+  --leading-heading: 1;
+  --tracking-heading: 0.02em;
+  --text-heading-lg: 48px;
+  --leading-heading-lg: 1;
+  --text-heading-2xl: 80px;
+  --leading-heading-2xl: 1.1;
+  --text-heading-3xl: 96px;
+  --leading-heading-3xl: 0.95;
+  --text-display: 189px;
+  --leading-display: 0.94;
+
+  /* Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-ultrabold: 800;
+
+  /* Spacing */
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-9: 9px;
+  --spacing-10: 10px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-18: 18px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-56: 56px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-92: 92px;
+
+  /* Layout */
+  --page-max-width: 1280px;
+  --section-gap: 80px;
+  --card-padding: 40px;
+  --element-gap: 16px;
+
+  /* Border Radius */
+  --radius-small: 16px;
+  --radius-medium: 20px;
+  --radius-cards: 40px;
+  --radius-buttons: 40px;
+  --radius-inputs: 100px;
+  --radius-pills: 800px;
+
+  /* CTA */
+  --cta-padding-y: 12px;
+  --cta-padding-x: 24px;
+  --cta-font-size: var(--text-body);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

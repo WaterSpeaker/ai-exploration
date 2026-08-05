@@ -1,0 +1,254 @@
+---
+interface Props {
+  id: string;
+  index: string;
+  title: string;
+  subtitle?: string;
+  lead?: string;
+  /**
+   * Session surface (Figma):
+   * - `panel` (default): Limestone bottom background card
+   * - `flush`: no bottom background card — sits on Pumice canvas
+   */
+  surface?: 'panel' | 'flush';
+  /**
+   * Panel tone (Figma):
+   * - `light` (default): Limestone panel, Obsidian type
+   * - `dark`: Obsidian panel, Chalk type (section 02)
+   */
+  tone?: 'light' | 'dark';
+  /** lead text uses Ember color */
+  leadAccent?: boolean;
+  /** short Ember bar under the header */
+  accentBar?: boolean;
+  /** title casing — Figma About uses capitalize */
+  titleTransform?: 'uppercase' | 'capitalize' | 'none';
+  /** Figma section 04: medium lead + 32px content gap */
+  leadMedium?: boolean;
+  contentGap?: 32 | 36;
+  /** bottom-end CTA (Figma section 01) */
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+const {
+  id,
+  index,
+  title,
+  subtitle,
+  lead,
+  surface = 'panel',
+  tone = 'light',
+  leadAccent = false,
+  accentBar = false,
+  titleTransform = 'uppercase',
+  leadMedium = false,
+  contentGap = 36,
+  ctaLabel,
+  ctaHref = '#',
+} = Astro.props;
+
+const isFlush = surface === 'flush';
+const isDark = tone === 'dark' && !isFlush;
+const ctaIsExternal = /^https?:\/\//.test(ctaHref) || /\.pdf(?:$|[?#])/i.test(ctaHref);
+---
+
+<section class="timeline-section" id={id} aria-labelledby={`${id}-title`}>
+  <div
+    class:list={[
+      'timeline-section__panel',
+      {
+        card: !isFlush,
+        'timeline-section__panel--flush': isFlush,
+        'timeline-section__panel--dark': isDark,
+        'timeline-section__panel--with-cta': Boolean(ctaLabel),
+      },
+    ]}
+    data-reveal
+    style={`--section-content-gap: ${contentGap}px`}
+  >
+    <header class="timeline-section__header">
+      <div class="timeline-section__index">
+        <span class="tag">{index}</span>
+      </div>
+      <h2
+        class:list={[
+          'timeline-section__title',
+          `timeline-section__title--${titleTransform}`,
+        ]}
+        id={`${id}-title`}
+      >
+        {title}
+      </h2>
+      {subtitle && <p class="timeline-section__subtitle">{subtitle}</p>}
+      {
+        lead && (
+          <p
+            class:list={[
+              'timeline-section__lead',
+              { 'timeline-section__lead--accent': leadAccent, 'timeline-section__lead--medium': leadMedium },
+            ]}
+          >
+            {lead}
+          </p>
+        )
+      }
+      {accentBar && <span class="timeline-section__accent-bar" aria-hidden="true" />}
+    </header>
+    <div class="timeline-section__content">
+      <slot />
+    </div>
+    {
+      ctaLabel && (
+        <a
+          class="timeline-section__cta btn"
+          href={ctaHref}
+          target={ctaIsExternal ? '_blank' : undefined}
+          rel={ctaIsExternal ? 'noopener noreferrer' : undefined}
+        >
+          {ctaLabel}
+        </a>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .timeline-section {
+    margin-bottom: var(--section-gap);
+    scroll-margin-top: 112px;
+  }
+
+  .timeline-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .timeline-section__panel--flush {
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  .timeline-section__panel--dark {
+    background: var(--color-obsidian);
+    color: var(--color-chalk);
+  }
+
+  .timeline-section__panel--with-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .timeline-section__panel--with-cta .timeline-section__header,
+  .timeline-section__panel--with-cta .timeline-section__content {
+    width: 100%;
+  }
+
+  .timeline-section__header {
+    margin-bottom: 0;
+  }
+
+  .timeline-section__content {
+    padding-top: var(--section-content-gap, 36px);
+  }
+
+  .timeline-section__index {
+    height: 25px;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 3.5px;
+  }
+
+  .timeline-section__title {
+    margin-top: 0;
+    padding-top: var(--spacing-16);
+    font-size: clamp(var(--text-heading), 5vw, var(--text-heading-lg));
+    line-height: var(--leading-heading-lg);
+    letter-spacing: var(--tracking-heading);
+    text-transform: uppercase;
+  }
+
+  .timeline-section__panel--dark .timeline-section__title {
+    color: var(--color-chalk);
+  }
+
+  .timeline-section__title--capitalize {
+    text-transform: capitalize;
+  }
+
+  .timeline-section__title--none {
+    text-transform: none;
+  }
+
+  .timeline-section__subtitle {
+    margin: var(--spacing-12) 0 0;
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.04em;
+    color: var(--color-ember);
+  }
+
+  .timeline-section__lead {
+    margin: 0;
+    padding-top: var(--spacing-16);
+    max-width: 36em;
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--leading-body);
+    color: var(--color-obsidian);
+    opacity: 0.72;
+  }
+
+  .timeline-section__panel--dark .timeline-section__lead {
+    color: var(--color-chalk);
+    opacity: 0.75;
+  }
+
+  .timeline-section__lead--accent {
+    color: var(--color-ember);
+    opacity: 1;
+    max-width: none;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .timeline-section__lead--medium {
+    font-weight: var(--font-weight-medium);
+  }
+
+  .timeline-section__accent-bar {
+    display: block;
+    width: 40px;
+    height: 4px;
+    margin-top: var(--spacing-20);
+    border-radius: 30px;
+    background: var(--color-ember);
+  }
+
+  .timeline-section__cta {
+    margin-top: 0;
+    background: var(--color-obsidian);
+    color: var(--color-chalk);
+    border: 1.5px solid var(--color-obsidian);
+    border-radius: 50px;
+    padding: 20px 28px;
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.1625;
+    letter-spacing: 0;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .timeline-section__cta:hover {
+    background: var(--color-chalk);
+    color: var(--color-obsidian);
+    border-color: var(--color-obsidian);
+    opacity: 1;
+  }
+</style>

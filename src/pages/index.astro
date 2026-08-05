@@ -1,0 +1,360 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteNav from '../components/SiteNav.astro';
+import TimelineNav from '../components/TimelineNav.astro';
+import TimelineSection from '../components/TimelineSection.astro';
+import ResumeBlock from '../components/ResumeBlock.astro';
+import ProjectList from '../components/ProjectList.astro';
+import WorkflowSteps from '../components/WorkflowSteps.astro';
+import VibeGrid from '../components/VibeGrid.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { aboutSection } from '../data/about';
+import { contactSection } from '../data/contact';
+import { resume } from '../data/resume';
+import { workProjects } from '../data/work';
+import { workflow } from '../data/workflow';
+import { vibeProjects } from '../data/vibe';
+import { timelineSections } from '../data/timeline';
+import { withBase } from '../lib/paths';
+
+const portraitSrc = withBase('/chen-portrait.png?v=3');
+---
+
+<BaseLayout>
+  <a class="skip-link" href="#resume">跳到内容</a>
+  <SiteNav />
+
+  <header class="hero site-shell">
+    <div class="hero__visual" aria-hidden="true">
+      <img
+        class="hero__portrait"
+        src={portraitSrc}
+        alt=""
+        width="400"
+        height="400"
+        decoding="async"
+      />
+    </div>
+    <div class="hero__copy">
+      <h1 class="hero__brand">
+        <span class="hero__brand-line hero__brand-line--name">Chen’s</span>
+        <span class="hero__brand-line hero__brand-line--title">AI Exploration</span>
+      </h1>
+      <p class="hero__tagline">在工作内外的时间里，探索 AI 时代的各种可能性。</p>
+    </div>
+  </header>
+
+  <div class="page site-shell">
+    <aside class="page__nav">
+      <TimelineNav sections={timelineSections} />
+    </aside>
+
+    <main class="page__main">
+      <TimelineSection
+        id="resume"
+        index="01"
+        title="About"
+        titleTransform="capitalize"
+        surface="panel"
+        lead="一个好奇心很强的人。"
+        accentBar={true}
+        ctaLabel={aboutSection.ctaLabel}
+        ctaHref={aboutSection.ctaHref}
+      >
+        <ResumeBlock resume={resume} />
+      </TimelineSection>
+
+      <TimelineSection
+        id="work"
+        index="02"
+        title="AI Exploration In E-Commerce"
+        titleTransform="none"
+        surface="panel"
+        tone="dark"
+        lead="电商业务中的 AI 探索：如何将 AI 能力嵌入到消费者的日常购物路径中。"
+        leadMedium={true}
+        accentBar={true}
+        contentGap={32}
+      >
+        <ProjectList projects={workProjects} />
+      </TimelineSection>
+
+      <TimelineSection
+        id="workflow"
+        index="03"
+        title="Design To Code Workflow"
+        titleTransform="capitalize"
+        surface="flush"
+        lead="如何通过 vibe coding 重塑上下游协同方式，提升生产效率"
+        leadMedium={true}
+        accentBar={true}
+        contentGap={32}
+      >
+        <WorkflowSteps workflow={workflow} />
+      </TimelineSection>
+
+      <TimelineSection
+        id="vibe"
+        index="04"
+        title="Vibe Coding"
+        titleTransform="capitalize"
+        surface="flush"
+        lead="周末与碎片时间里，用对话把想法敲成可运行的小东西。"
+        leadMedium={true}
+        contentGap={32}
+        accentBar={true}
+      >
+        <VibeGrid projects={vibeProjects} />
+      </TimelineSection>
+
+      <section class="contact-section" id="contact" aria-labelledby="contact-title">
+        <div class="contact-section__panel" data-reveal>
+          <header class="contact-section__header">
+            <div class="contact-section__index">
+              <span class="tag">05</span>
+            </div>
+            <h2 class="contact-section__title" id="contact-title">Contact me</h2>
+            <p class="contact-section__lead">{contactSection.lead}</p>
+          </header>
+          <ContactForm />
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer site-shell">
+    <hr class="divider-dotted" />
+    <p>© {new Date().getFullYear()} Chen WANG</p>
+  </footer>
+</BaseLayout>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: var(--spacing-16);
+    top: -3rem;
+    z-index: 100;
+    padding: var(--spacing-8) var(--spacing-16);
+    background: var(--color-obsidian);
+    color: var(--color-chalk);
+    border-radius: var(--radius-pills);
+    text-decoration: none;
+    transition: top 0.2s ease;
+  }
+
+  .skip-link:focus {
+    top: var(--spacing-16);
+  }
+
+  .hero {
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
+    display: block;
+    min-height: 328px;
+    padding: 30px 0 70px;
+  }
+
+  .hero__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0;
+    max-width: 651px;
+    font-family: 'PP Neue Corp Compact', 'PP Neue Corp Compact Ultrabold',
+      'PP Neue Corp', sans-serif;
+    font-weight: 800;
+    font-synthesis: none;
+    letter-spacing: 0.027em;
+    text-transform: none;
+  }
+
+  .hero__brand-line {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .hero__brand-line--name {
+    font-size: clamp(48px, 7vw, 76px);
+    line-height: 1.1;
+  }
+
+  .hero__brand-line--title {
+    font-size: clamp(56px, 10vw, 120px);
+    line-height: 1.06;
+  }
+
+  .hero__tagline {
+    margin: var(--spacing-24) 0 0;
+    max-width: 448px;
+    padding-top: 6px;
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--leading-body);
+    opacity: 0.75;
+  }
+
+  .hero__visual {
+    position: absolute;
+    top: -4px;
+    right: 8px;
+    z-index: -1;
+    width: min(33%, 400px);
+    aspect-ratio: 1;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--surface-pumice-canvas);
+    pointer-events: none;
+    animation: hero-in 0.9s var(--ease-out) 0.1s both;
+  }
+
+  .hero__portrait {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    mix-blend-mode: darken;
+    user-select: none;
+  }
+
+  .hero__copy {
+    position: relative;
+    z-index: 1;
+    max-width: calc(100% - min(33%, 400px) - var(--spacing-16));
+    animation: hero-in 0.9s var(--ease-out) both;
+  }
+
+  .page {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: var(--spacing-40);
+    align-items: start;
+    padding-bottom: var(--section-gap);
+  }
+
+  .page__nav {
+    position: sticky;
+    top: 96px;
+  }
+
+  .page__main {
+    min-width: 0;
+  }
+
+  .contact-section {
+    margin-bottom: 0;
+    scroll-margin-top: 112px;
+  }
+
+  .contact-section__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    background: var(--color-obsidian);
+    color: var(--color-chalk);
+    border-radius: var(--radius-cards);
+    padding: var(--card-padding);
+  }
+
+  .contact-section__header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+  }
+
+  .contact-section__index {
+    height: 24.8px;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 3.5px;
+  }
+
+  .contact-section__title {
+    margin: 0;
+    padding-top: var(--spacing-16);
+    font-size: clamp(var(--text-heading), 5vw, var(--text-heading-lg));
+    line-height: var(--leading-heading-lg);
+    letter-spacing: var(--tracking-heading);
+    text-transform: capitalize;
+    color: var(--color-chalk);
+  }
+
+  .contact-section__lead {
+    margin: 0;
+    padding-top: var(--spacing-16);
+    max-width: 36em;
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--leading-body);
+    opacity: 0.75;
+    color: var(--color-chalk);
+  }
+
+  .footer {
+    padding-bottom: var(--spacing-56);
+    text-align: center;
+  }
+
+  .footer p {
+    margin: 0;
+    font-family: var(--font-caption);
+    font-size: var(--text-caption);
+    opacity: 0.55;
+  }
+
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--spacing-20));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 960px) {
+    .hero {
+      display: flex;
+      flex-direction: column;
+      min-height: auto;
+      padding: var(--spacing-24) 0 var(--spacing-56);
+    }
+
+    .hero__visual {
+      position: relative;
+      top: 0;
+      right: 0;
+      z-index: 0;
+      order: -1;
+      width: min(100%, 280px);
+      margin-left: auto;
+      margin-bottom: var(--spacing-16);
+    }
+
+    .hero__copy {
+      max-width: 100%;
+    }
+
+    .hero__brand-line {
+      white-space: normal;
+    }
+
+    .page {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-24);
+    }
+
+    .page__nav {
+      position: sticky;
+      top: 72px;
+      z-index: 20;
+      margin: 0 calc(var(--spacing-16) * -1);
+      padding: var(--spacing-8) var(--spacing-16);
+      background: var(--surface-pumice-canvas);
+    }
+  }
+</style>
