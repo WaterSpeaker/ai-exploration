@@ -28,8 +28,10 @@ jobs:
           cache: npm
 
       - name: Install
-        # npm ci can omit platform optional bindings (rolldown) from macOS lockfiles
-        run: npm install
+        # macOS-generated lockfiles can omit Linux rolldown native bindings
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
 
       - name: Build external
         run: npm run build:external
