@@ -48,8 +48,11 @@
 | id | surface | diff_type | internal | external | status | code_path |
 |----|---------|-----------|----------|----------|--------|-----------|
 | `url.lark.about-me` | About CTA | `rewrite` | 飞书简历文档 | `/chen-wang-resume.pdf`（王琛_简历.pdf） | `implemented` | `src/data/about.ts` |
-| `url.aime.event-bot` | Vibe card | `hide`（仅链接） | 保留 Aime 链接 | 保留卡片，无链接 | `implemented` | `src/data/vibe.ts` |
-| `url.lark.design-weekly` | Vibe card | `hide`（仅链接） | 保留飞书链接 | 保留卡片，无链接 | `implemented` | `src/data/vibe.ts` |
+| `url.muse-lab` | Vibe card / Labs experiment | `same` | Muse Lab vercel 链接 | Muse Lab vercel 链接 | `implemented` | `src/data/vibe.ts` · `src/data/labs.ts` |
+| `url.lark.design-weekly` | Vibe card / Labs tool | `hide`（仅链接） | 保留飞书链接 | 保留卡片，无链接 | `implemented` | `src/data/vibe.ts` · `src/data/labs.ts` |
+| `url.lark.personal-site-article` | Labs experiment | `hide`（仅链接） | 飞书「如何手搓个人网站」 | 保留卡，无文章 CTA | `implemented` | `src/data/labs.ts` |
+| `url.lark.muse-lab-article` | Labs experiment | `hide`（仅链接） | 飞书 Muse Lab 文章 | 保留卡，无文章 CTA | `implemented` | `src/data/labs.ts` |
+| `url.aime.design-weekly` | Labs tool | `hide`（仅链接） | Aime Skill | 不展示 Skill CTA | `implemented` | `src/data/labs.ts` |
 
 ---
 

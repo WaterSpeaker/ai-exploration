@@ -19,14 +19,11 @@ export const vibeProjects: VibeProject[] = [
     image: withBase('/vibe/personal-site.png?v=3'),
   },
   {
-    name: '活动资讯推送机器人',
-    blurb: '针对我感兴趣的越野跑、AI 相关主题，在每周三、五收集新活动信息并推送给我',
-    stack: ['Aime', '飞书机器人'],
-    href: pick({
-      internal: 'https://edb246c054dc.aime-app.bytedance.net/',
-      external: undefined,
-    }),
-    image: withBase('/vibe/event-bot.png?v=2'),
+    name: 'Vibe coding 灵感生成器',
+    blurb: '想 vibe coding？探索方向或打磨已有想法，拿走一份能丢进 agent 直接开工的 Brief。',
+    stack: ['Cursor', 'Deepseek', 'Vercel'],
+    href: 'https://muse-lab-vibe.vercel.app/',
+    image: withBase('/vibe/muse-lab.png'),
   },
   {
     name: '团队设计周刊Skill',

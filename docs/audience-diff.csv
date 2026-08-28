@@ -7,7 +7,10 @@ doc.ai-design-opportunities,work doc,external_only,不产出站内页,现有 HTM
 doc.tts-ai-design-language,work doc,external_only,不产出站内页,现有 HTML（待脱敏审核）,implemented,src/pages/work/[slug].astro,后续审核脱敏
 url.lark.about-me,About CTA,rewrite,https://bytedance.larkoffice.com/docx/YZljdzO2HorQqqxqbduc6SnanVh,/chen-wang-resume.pdf,implemented,src/data/about.ts,源文件：王琛_简历.pdf
 url.aime.event-bot,Vibe card,hide,https://edb246c054dc.aime-app.bytedance.net/,保留卡片无链接,implemented,src/data/vibe.ts,对外去链接
-url.lark.design-weekly,Vibe card,hide,https://bytedance.larkoffice.com/docx/Sa48di26BoBaPsxpy6AclSvNnFc,保留卡片无链接,implemented,src/data/vibe.ts,对外去链接
+url.lark.design-weekly,Vibe card / Labs tool,hide,https://bytedance.larkoffice.com/docx/Sa48di26BoBaPsxpy6AclSvNnFc,保留卡片无链接,implemented,src/data/vibe.ts;src/data/labs.ts,对外去链接
+url.lark.personal-site-article,Labs experiment,hide,https://bytedance.my.larkoffice.com/docx/D5JXd5MbKo75GWxo5AdmVUaJy2e,保留卡无文章CTA,implemented,src/data/labs.ts,对外去文章链接
+url.lark.muse-lab-article,Labs experiment,hide,https://bytedance.my.larkoffice.com/docx/ORfyd3iMSoNyg5x7xWcmt07RyAf,保留卡无文章CTA,implemented,src/data/labs.ts,对外去文章链接
+url.aime.design-weekly,Labs tool,hide,https://aime.bytedance.net/redirects/chat/knowledge?spaceId=31ace2cc-dcff-4347-a6a3-17a7b4645b66&knowledge_share_id=bdded6fa-8801-4eda-a61a-a7c6b94baddb&skill_source=2,不展示Skill CTA,implemented,src/data/labs.ts,对外隐藏 Aime
 url.lark.vibe-config,Workflow CTA,hide,售后域 vibe coding 0-1 配置指南,隐藏按钮,implemented,src/data/workflow.ts,对外隐藏
 url.skills.tts-design,Workflow CTA,hide,TTS design skill,隐藏按钮,implemented,src/data/workflow.ts,对外隐藏
 contact.lead,Contact copy,rewrite,在飞书上找到我,微信或邮件联系我,implemented,src/data/contact.ts,

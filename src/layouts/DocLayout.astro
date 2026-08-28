@@ -9,13 +9,13 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
-const workAnchorHref = `${withBase('/')}#work`;
+const introAnchorHref = `${withBase('/')}#resume`;
 ---
 
 <BaseLayout title={`${title} · Chen's AI Exploration`} description={description}>
-  <SiteNav homeAnchors={true} />
+  <SiteNav />
   <main class="doc-page site-shell">
-    <a class="doc-page__back" href={workAnchorHref}>← AI in E-Commerce</a>
+    <a class="doc-page__back" href={introAnchorHref}>← Intro</a>
     <article class="doc-page__panel card" data-reveal>
       <header class="doc-page__header">
         <h1 class="doc-page__title">{title}</h1>
@@ -302,6 +302,11 @@ const workAnchorHref = `${withBase('/')}#work`;
     border: none;
     background: color-mix(in srgb, var(--color-limestone) 35%, var(--color-pumice));
     border-radius: 12px;
+  }
+
+  .doc-page__body :global(blockquote.doc-callout--summary) {
+    background: color-mix(in srgb, var(--color-sulfur) 30%, var(--color-limestone));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-sulfur) 52%, transparent);
   }
 
   .doc-page__body :global(blockquote > :last-child) {

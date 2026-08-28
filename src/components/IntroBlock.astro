@@ -1,0 +1,177 @@
+---
+import type { IntroGroup, IntroMark } from '../data/intro';
+import { introGroups } from '../data/intro';
+import WorkflowLayersPanel from './WorkflowLayersPanel.astro';
+
+function isExternalHref(href: string) {
+  return /^https?:\/\//.test(href) || /\.pdf(?:$|[?#])/i.test(href);
+}
+
+function markHref(mark: IntroMark) {
+  return mark.href || undefined;
+}
+---
+
+<div class="intro">
+  {
+    introGroups.map((group: IntroGroup) => (
+      <section class="intro__group">
+        <h3 class="intro__label">{group.label}</h3>
+        <ul class:list={['intro__list', { 'intro__list--muted': group.muted }]}>
+          {group.rows.map((row) => (
+            <li class="intro__row">
+              <div class="intro__row-inner">
+                <span class="intro__text">
+                  {row.marks.map((mark) => {
+                    const href = markHref(mark);
+                    if (mark.panel) {
+                      return (
+                        <button
+                          type="button"
+                          class="intro__link"
+                          data-workflow-panel={mark.panel}
+                        >
+                          {mark.text}
+                        </button>
+                      );
+                    }
+                    if (href) {
+                      const external = isExternalHref(href);
+                      return (
+                        <a
+                          class:list={['intro__link', { 'intro__link--quiet': mark.quiet }]}
+                          href={href}
+                          target={external ? '_blank' : undefined}
+                          rel={external ? 'noopener noreferrer' : undefined}
+                        >
+                          {mark.text}
+                        </a>
+                      );
+                    }
+                    return mark.text;
+                  })}
+                </span>
+                {row.detailsHref && (
+                  <a
+                    class="intro__details"
+                    href={row.detailsHref}
+                    target={isExternalHref(row.detailsHref) ? '_blank' : undefined}
+                    rel={isExternalHref(row.detailsHref) ? 'noopener noreferrer' : undefined}
+                  >
+                    Details
+                  </a>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>
+
+<WorkflowLayersPanel />
+
+<style>
+  .intro {
+    display: grid;
+    gap: 36px;
+  }
+
+  .intro__group {
+    display: grid;
+    gap: var(--spacing-12);
+  }
+
+  .intro__label {
+    margin: 0;
+    font-family: var(--font-caption);
+    font-size: var(--text-caption);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: 0.08em;
+    line-height: var(--leading-caption);
+    text-transform: uppercase;
+    color: var(--color-obsidian);
+    opacity: 0.55;
+  }
+
+  .intro__list {
+    list-style: disc;
+    margin: 0;
+    padding: var(--spacing-20) var(--spacing-20) var(--spacing-20) 41px;
+    background: var(--surface-pumice-canvas);
+    border-radius: var(--radius-medium);
+  }
+
+  .intro__row + .intro__row {
+    margin-top: 10px;
+  }
+
+  .intro__row-inner {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .intro__text {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    font-weight: var(--font-weight-regular);
+    line-height: 21.7px;
+    color: var(--color-obsidian);
+  }
+
+  .intro__list--muted .intro__text {
+    opacity: 0.75;
+  }
+
+  .intro__details {
+    flex: 0 0 auto;
+    font-family: var(--font-caption);
+    font-size: var(--text-body-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: 18.6px;
+    color: var(--color-ember);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .intro__details:hover {
+    color: var(--color-ember);
+    opacity: 0.8;
+  }
+
+  .intro__link {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--color-ember);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+    cursor: pointer;
+  }
+
+  .intro__link:hover {
+    color: var(--color-ember);
+    opacity: 0.8;
+  }
+
+  .intro__link--quiet {
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+  }
+
+  @media (max-width: 640px) {
+    .intro__row-inner {
+      align-items: flex-start;
+    }
+
+    .intro__details {
+      padding-top: 2px;
+    }
+  }
+</style>

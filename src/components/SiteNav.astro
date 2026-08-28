@@ -2,19 +2,23 @@
 import { withBase } from '../lib/paths';
 
 interface Props {
-  /** Use absolute `/#section` links (needed on secondary pages). */
-  homeAnchors?: boolean;
+  /** Which top-nav page is current. */
+  active?: 'home' | 'labs';
 }
 
-const { homeAnchors = false } = Astro.props;
+const { active = 'home' } = Astro.props;
 const homeHref = withBase('/');
-const prefix = homeAnchors ? homeHref : '';
+const labsHref = withBase('/ai-labs');
 
-const navLinks: { id: string; label: string }[] = [
-  { id: 'resume', label: 'About' },
-  { id: 'work', label: 'AI in E-Commerce' },
-  { id: 'workflow', label: 'D2C workflow' },
-  { id: 'vibe', label: 'Vibe Coding' },
+type NavLink = {
+  label: string;
+  href: string;
+  page: 'home' | 'labs';
+};
+
+const navLinks: NavLink[] = [
+  { label: 'Intro', href: homeHref, page: 'home' },
+  { label: 'AI Labs', href: labsHref, page: 'labs' },
 ];
 ---
 
@@ -25,74 +29,26 @@ const navLinks: { id: string; label: string }[] = [
       <span class="site-nav__brand-text">Chen’s AI Exploration</span>
     </a>
 
-    <nav class="site-nav__links" aria-label="主导航" data-site-nav-links>
+    <nav class="site-nav__links" aria-label="主导航">
       {
-        navLinks.map((link, i) => (
-          <a
-            class:list={['site-nav__link', { 'is-active': !homeAnchors && i === 0 }]}
-            href={`${prefix}#${link.id}`}
-            data-section-id={link.id}
-            aria-current={!homeAnchors && i === 0 ? 'true' : undefined}
-          >
-            <span class="site-nav__link-label">{link.label}</span>
-          </a>
-        ))
+        navLinks.map((link) => {
+          const isActive = link.page === active;
+          return (
+            <a
+              class:list={['site-nav__link', { 'is-active': isActive }]}
+              href={link.href}
+              aria-current={isActive ? 'true' : undefined}
+            >
+              <span class="site-nav__link-label">{link.label}</span>
+            </a>
+          );
+        })
       }
     </nav>
 
-    <a class="site-nav__cta" href={`${prefix}#contact`}>Contact me</a>
+    <a class="site-nav__cta" href={`${homeHref}#contact`}>Contact me</a>
   </div>
 </header>
-
-<script>
-  function initSiteNavTabs() {
-    const nav = document.querySelector('[data-site-nav-links]');
-    if (!nav) return;
-
-    const links = Array.from(
-      nav.querySelectorAll<HTMLAnchorElement>('.site-nav__link'),
-    );
-    const sectionIds = links
-      .map((link) => link.dataset.sectionId)
-      .filter((id): id is string => Boolean(id));
-    const nodes = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => Boolean(el));
-
-    const setActive = (id: string | null) => {
-      links.forEach((link) => {
-        const active = Boolean(id) && link.dataset.sectionId === id;
-        link.classList.toggle('is-active', active);
-        if (active) link.setAttribute('aria-current', 'true');
-        else link.removeAttribute('aria-current');
-      });
-    };
-
-    if (nodes.length === 0) {
-      setActive(null);
-      return;
-    }
-
-    if (sectionIds[0]) setActive(sectionIds[0]);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible[0]?.target.id) setActive(visible[0].target.id);
-      },
-      {
-        rootMargin: '-20% 0px -55% 0px',
-        threshold: [0.1, 0.25, 0.5],
-      },
-    );
-    nodes.forEach((node) => observer.observe(node));
-  }
-
-  initSiteNavTabs();
-  document.addEventListener('astro:page-load', initSiteNavTabs);
-</script>
 
 <style>
   .site-nav {
@@ -110,6 +66,8 @@ const navLinks: { id: string; label: string }[] = [
     background: var(--surface-limestone);
     border-radius: var(--radius-pills);
     padding: 9px 12px 9px 20px;
+    font-family: 'PP Neue Corp Compact', var(--font-body);
+    font-synthesis: none;
   }
 
   .site-nav__brand {
@@ -129,18 +87,16 @@ const navLinks: { id: string; label: string }[] = [
   .site-nav__mark {
     width: 14px;
     height: 14px;
-    border-radius: 4px;
+    border-radius: 50%;
     background: var(--color-ember);
     flex-shrink: 0;
   }
 
   .site-nav__brand-text {
-    font-family: 'PP Neue Corp', var(--font-body);
     font-size: 16px;
     font-weight: 500;
     line-height: 1.05;
     white-space: nowrap;
-    font-synthesis: none;
   }
 
   .site-nav__links {
@@ -160,12 +116,10 @@ const navLinks: { id: string; label: string }[] = [
     border-radius: var(--radius-pills);
     text-decoration: none;
     white-space: nowrap;
-    font-family: 'PP Neue Corp', var(--font-body);
     font-size: 14px;
     font-weight: 500;
     line-height: 1.3;
     color: var(--color-obsidian);
-    font-synthesis: none;
   }
 
   .site-nav__link:hover {
@@ -200,11 +154,9 @@ const navLinks: { id: string; label: string }[] = [
     color: var(--color-chalk);
     text-decoration: none;
     white-space: nowrap;
-    font-family: 'PP Neue Corp', var(--font-body);
     font-size: 16px;
     font-weight: 500;
     line-height: 1.2;
-    font-synthesis: none;
   }
 
   .site-nav__cta:hover {

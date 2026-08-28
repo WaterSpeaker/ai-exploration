@@ -7,6 +7,12 @@ export type WorkDocPage = {
 
 export const workDocPages: WorkDocPage[] = [
   {
+    slug: 'vibe-coding-personal-site',
+    title: 'Vibe coding 之如何手搓个人网站',
+    chip: 'Vibe coding personal site',
+    description: '一个不会写代码的设计师，第一次用 vibe coding 搭建并上线个人网站的实践记录。',
+  },
+  {
     slug: 'ai-shopping-chatbot-design',
     title: 'AI shopping assistant design',
     chip: 'AI shopping chatbot design',

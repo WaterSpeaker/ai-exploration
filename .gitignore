@@ -30,3 +30,9 @@ pnpm-debug.log*
 # local doc conversion scratch
 .tmp-docs/
 .d2c_temp/
+tmp/
+output/
+
+# Original portfolio exports are kept locally; publish optimized web copies.
+public/portfolios/chen-wang-portfolio-2022.pdf
+public/portfolios/chen-wang-portfolio-2023.pdf

@@ -3,6 +3,18 @@
  * System installs expose each cut as its own family name.
  */
 @font-face {
+  font-family: 'MF Hao Ying';
+  src:
+    local('MFHaoYingNoncommercial Regular'),
+    local('MFHaoYingNoncommercial-Regular'),
+    local('MFHaoYing_Noncommercial-Regular'),
+    url('/fonts/MFHaoYing_Noncommercial-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'PP Neue Corp Compact';
   src:
     local('PP Neue Corp Compact Medium'),

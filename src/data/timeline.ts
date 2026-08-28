@@ -5,9 +5,7 @@ export type TimelineSectionMeta = {
 };
 
 export const timelineSections: TimelineSectionMeta[] = [
-  { id: 'resume', label: 'About', index: '01' },
-  { id: 'work', label: 'AI in E-Commerce', index: '02' },
-  { id: 'workflow', label: 'D2C workflow', index: '03' },
-  { id: 'vibe', label: 'Vibe Coding', index: '04' },
-  { id: 'contact', label: 'Contact me', index: '05' },
+  { id: 'resume', label: 'Intro', index: '01' },
+  { id: 'portfolios', label: 'Traditional Portfolios', index: '02' },
+  { id: 'contact', label: 'Contact me', index: '03' },
 ];

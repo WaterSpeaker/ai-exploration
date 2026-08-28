@@ -1,0 +1,370 @@
+---
+import { workflowLayersPanel } from '../data/workflow';
+---
+
+<dialog
+  class="workflow-panel"
+  id={`panel-${workflowLayersPanel.id}`}
+  data-workflow-dialog={workflowLayersPanel.id}
+  aria-labelledby="workflow-panel-title"
+>
+  <div class="workflow-panel__shell">
+    <header class="workflow-panel__header">
+      <div class="workflow-panel__heading">
+        <p class="workflow-panel__eyebrow">设计 × 研发</p>
+        <h2 class="workflow-panel__title" id="workflow-panel-title">
+          {workflowLayersPanel.title}
+        </h2>
+        <p class="workflow-panel__subtitle">{workflowLayersPanel.subtitle}</p>
+      </div>
+      <button type="button" class="workflow-panel__close" data-workflow-close aria-label="关闭">
+        <span aria-hidden="true">×</span>
+      </button>
+    </header>
+
+    <div class="workflow-panel__body">
+      <ol class="workflow-panel__layers">
+        {
+          workflowLayersPanel.layers.map((layer) => (
+            <li class:list={['workflow-panel__layer', { 'is-featured': layer.featured }]}>
+              <div class="workflow-panel__rank" aria-hidden="true">
+                {String(layer.rank).padStart(2, '0')}
+              </div>
+              <div class="workflow-panel__layer-main">
+                <div class="workflow-panel__layer-title-row">
+                  <h3 class="workflow-panel__layer-title">
+                    {layer.title}
+                    {layer.featured && (
+                      <span class="workflow-panel__star" aria-hidden="true">
+                        ★
+                      </span>
+                    )}
+                  </h3>
+                  <p class="workflow-panel__layer-en">{layer.titleEn}</p>
+                </div>
+                {layer.example && <p class="workflow-panel__example">{layer.example}</p>}
+                <dl class="workflow-panel__meta">
+                  <div>
+                    <dt>类型</dt>
+                    <dd>{layer.type}</dd>
+                  </div>
+                  <div>
+                    <dt>工作流</dt>
+                    <dd>{layer.workflow}</dd>
+                  </div>
+                  <div>
+                    <dt>优劣</dt>
+                    <dd>{layer.prosCons}</dd>
+                  </div>
+                </dl>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  function initWorkflowPanels() {
+    const triggers = document.querySelectorAll<HTMLButtonElement>('[data-workflow-panel]');
+    if (triggers.length === 0) return;
+
+    triggers.forEach((trigger) => {
+      if (trigger.dataset.bound === 'true') return;
+      trigger.dataset.bound = 'true';
+
+      trigger.addEventListener('click', () => {
+        const id = trigger.dataset.workflowPanel;
+        if (!id) return;
+        const dialog = document.querySelector<HTMLDialogElement>(
+          `[data-workflow-dialog="${id}"]`,
+        );
+        if (!dialog) return;
+        dialog.showModal();
+        document.documentElement.classList.add('workflow-panel-open');
+      });
+    });
+
+    document.querySelectorAll<HTMLDialogElement>('[data-workflow-dialog]').forEach((dialog) => {
+      if (dialog.dataset.bound === 'true') return;
+      dialog.dataset.bound = 'true';
+
+      const close = () => {
+        if (dialog.open) dialog.close();
+      };
+
+      dialog.querySelectorAll('[data-workflow-close]').forEach((btn) => {
+        btn.addEventListener('click', close);
+      });
+
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) close();
+      });
+
+      dialog.addEventListener('close', () => {
+        document.documentElement.classList.remove('workflow-panel-open');
+      });
+    });
+  }
+
+  initWorkflowPanels();
+  document.addEventListener('astro:page-load', initWorkflowPanels);
+</script>
+
+<style is:global>
+  html.workflow-panel-open {
+    overflow: hidden;
+  }
+
+  .workflow-panel::backdrop {
+    background: color-mix(in srgb, var(--color-obsidian) 48%, transparent);
+    backdrop-filter: blur(6px);
+  }
+</style>
+
+<style>
+  .workflow-panel {
+    width: min(1080px, calc(100vw - 32px));
+    max-width: 1080px;
+    max-height: min(88vh, 920px);
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-cards);
+    background: transparent;
+    color: var(--color-obsidian);
+    overflow: hidden;
+  }
+
+  .workflow-panel__shell {
+    display: flex;
+    flex-direction: column;
+    max-height: min(88vh, 920px);
+    background: var(--surface-limestone);
+    border-radius: var(--radius-cards);
+    box-shadow: 0 24px 80px color-mix(in srgb, var(--color-obsidian) 18%, transparent);
+    overflow: auto;
+    animation: workflow-panel-in 0.35s var(--ease-out);
+  }
+
+  .workflow-panel__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-24);
+    margin: var(--spacing-24) var(--spacing-24) 0;
+    padding: var(--spacing-32);
+    border-bottom: 0;
+    border-radius: var(--radius-cards);
+    background: var(--color-plasma-violet);
+    color: var(--color-chalk);
+  }
+
+  .workflow-panel__heading {
+    display: grid;
+    gap: var(--spacing-12);
+    min-width: 0;
+  }
+
+  .workflow-panel__eyebrow {
+    margin: 0;
+    font-size: var(--text-caption);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.72;
+  }
+
+  .workflow-panel__title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: var(--font-weight-ultrabold);
+    line-height: 1.05;
+    letter-spacing: var(--tracking-heading);
+    color: var(--color-chalk);
+  }
+
+  .workflow-panel__subtitle {
+    margin: 0;
+    max-width: 36em;
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--leading-body);
+    opacity: 0.8;
+    color: var(--color-chalk);
+  }
+
+  .workflow-panel__close {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: inline-grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-chalk) 16%, transparent);
+    color: var(--color-chalk);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .workflow-panel__close:hover {
+    background: var(--color-chalk);
+    color: var(--color-plasma-violet);
+  }
+
+  .workflow-panel__body {
+    padding: var(--spacing-24) var(--spacing-40) var(--spacing-32);
+    overflow: visible;
+  }
+
+  .workflow-panel__layers {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--spacing-16);
+  }
+
+  .workflow-panel__layer {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: var(--spacing-16);
+    padding: var(--spacing-20) 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-obsidian) 10%, transparent);
+  }
+
+  .workflow-panel__layer:last-child {
+    border-bottom: 0;
+  }
+
+  .workflow-panel__layer.is-featured .workflow-panel__rank {
+    color: var(--color-plasma-violet);
+  }
+
+  .workflow-panel__rank {
+    font-family: var(--font-display);
+    font-size: var(--text-heading-sm);
+    font-weight: var(--font-weight-ultrabold);
+    letter-spacing: var(--tracking-heading);
+    line-height: 1;
+    padding-top: 4px;
+    opacity: 0.85;
+  }
+
+  .workflow-panel__layer-main {
+    display: grid;
+    gap: var(--spacing-12);
+    min-width: 0;
+  }
+
+  .workflow-panel__layer-title-row {
+    display: grid;
+    gap: var(--spacing-4);
+  }
+
+  .workflow-panel__layer-title {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-8);
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+
+  .workflow-panel__star {
+    color: var(--color-plasma-violet);
+    font-size: 0.85em;
+  }
+
+  .workflow-panel__layer-en {
+    margin: 0;
+    font-size: var(--text-caption);
+    letter-spacing: 0.02em;
+    opacity: 0.5;
+  }
+
+  .workflow-panel__example {
+    margin: 0;
+    font-size: var(--text-body-sm);
+    opacity: 0.62;
+  }
+
+  .workflow-panel__meta {
+    margin: 0;
+    display: grid;
+    gap: var(--spacing-10);
+  }
+
+  .workflow-panel__meta > div {
+    display: grid;
+    grid-template-columns: 4.5em minmax(0, 1fr);
+    gap: var(--spacing-12);
+    align-items: start;
+  }
+
+  .workflow-panel__meta dt {
+    margin: 0;
+    font-size: var(--text-caption);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.45;
+    padding-top: 2px;
+  }
+
+  .workflow-panel__meta dd {
+    margin: 0;
+    font-size: var(--text-body-sm);
+    line-height: 1.55;
+    opacity: 0.86;
+  }
+
+  @keyframes workflow-panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .workflow-panel {
+      width: calc(100vw - 16px);
+      max-height: calc(100vh - 16px);
+    }
+
+    .workflow-panel__shell {
+      max-height: calc(100vh - 16px);
+    }
+
+    .workflow-panel__body {
+      padding-left: var(--spacing-20);
+      padding-right: var(--spacing-20);
+    }
+
+    .workflow-panel__header {
+      margin: var(--spacing-16) var(--spacing-16) 0;
+      padding: var(--spacing-24);
+    }
+
+    .workflow-panel__layer {
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: var(--spacing-12);
+    }
+
+    .workflow-panel__meta > div {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-4);
+    }
+  }
+</style>

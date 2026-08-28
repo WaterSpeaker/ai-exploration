@@ -1,0 +1,885 @@
+---
+import { labsPodcast, labsProjects } from '../data/labs';
+---
+
+<div class="labs-layout">
+  <section class="labs-projects" aria-label="AI 实验项目" data-labs-projects data-reveal>
+    <div class="labs-projects__stage">
+      {
+        labsProjects.map((project, index) => (
+          <article
+            class="labs-projects__panel"
+            id={`labs-project-panel-${project.id}`}
+            role="tabpanel"
+            aria-labelledby={`labs-project-tab-${project.id}`}
+            data-project-panel={project.id}
+            hidden={index !== 0}
+          >
+            <div class="labs-projects__content">
+              <div class="labs-projects__media">
+                <img
+                  class="labs-projects__image"
+                  src={project.image}
+                  alt={project.imageAlt}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                />
+              </div>
+
+              <div class="labs-projects__copy">
+                {project.intro ? (
+                  <>
+                    {(Array.isArray(project.intro) ? project.intro : [project.intro]).map(
+                      (paragraph) => <p class="labs-projects__intro">{paragraph}</p>,
+                    )}
+                    {project.highlights && (
+                      <ul class="labs-projects__highlights">
+                        {project.highlights.map((highlight) => <li>{highlight}</li>)}
+                      </ul>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <h2>{project.title}</h2>
+                    <p>{project.blurb}</p>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {
+              project.primary || project.secondary ? (
+                <div class="labs-projects__actions">
+                  {project.primary && (
+                    <a
+                      class="labs-projects__button labs-projects__button--primary"
+                      href={project.primary.href}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {project.primary.label}
+                    </a>
+                  )}
+                  {project.secondary && (
+                    <a
+                      class="labs-projects__button labs-projects__button--secondary"
+                      href={project.secondary.href}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {project.secondary.label}
+                    </a>
+                  )}
+                </div>
+              ) : (
+                <p class="labs-projects__status">内部使用中</p>
+              )
+            }
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="labs-projects__tabs" role="tablist" aria-label="选择项目">
+      {
+        labsProjects.map((project, index) => (
+          <button
+            class="labs-projects__tab"
+            id={`labs-project-tab-${project.id}`}
+            type="button"
+            role="tab"
+            aria-selected={index === 0}
+            aria-controls={`labs-project-panel-${project.id}`}
+            tabindex={index === 0 ? 0 : -1}
+            data-project-tab={project.id}
+          >
+            <span class="labs-projects__tab-title">{project.navLabel}</span>
+          </button>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="labs-podcast" aria-labelledby="labs-podcast-title" data-reveal>
+    <div class="labs-podcast__show">
+      <div>
+        <h2 id="labs-podcast-title">{labsPodcast.name}</h2>
+        <p>我的对谈播客</p>
+        <span class="labs-podcast__accent" aria-hidden="true"></span>
+      </div>
+
+      <a
+        class="labs-podcast__show-link"
+        href={labsPodcast.href}
+        target="_blank"
+        rel="noreferrer"
+      >
+        去小宇宙
+      </a>
+    </div>
+
+    <ol class="labs-podcast__episodes">
+      {
+        labsPodcast.episodes.map((episode) => (
+          <li>
+            <a
+              class="labs-podcast__episode-link"
+              href={episode.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`收听 ${episode.volume}：${episode.title}`}
+            >
+              <span class="labs-podcast__vol">Vol {episode.volume}</span>
+              <div class="labs-podcast__episode-copy">
+                <h3>{episode.title}</h3>
+                <p>{episode.blurb}</p>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</div>
+
+<script>
+  function initLabsProjects() {
+    document.querySelectorAll<HTMLElement>('[data-labs-projects]').forEach((root) => {
+      if (root.dataset.bound === 'true') return;
+      root.dataset.bound = 'true';
+
+      const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-project-tab]'));
+      const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-project-panel]'));
+
+      const activate = (id: string, focus = false) => {
+        tabs.forEach((tab) => {
+          const isActive = tab.dataset.projectTab === id;
+          tab.setAttribute('aria-selected', String(isActive));
+          tab.tabIndex = isActive ? 0 : -1;
+          if (isActive && focus) tab.focus();
+        });
+
+        panels.forEach((panel) => {
+          panel.hidden = panel.dataset.projectPanel !== id;
+        });
+      };
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => {
+          if (tab.dataset.projectTab) activate(tab.dataset.projectTab);
+        });
+
+        tab.addEventListener('keydown', (event) => {
+          let nextIndex = index;
+          if (event.key === 'ArrowDown' || event.key === 'ArrowRight') nextIndex = index + 1;
+          else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') nextIndex = index - 1;
+          else if (event.key === 'Home') nextIndex = 0;
+          else if (event.key === 'End') nextIndex = tabs.length - 1;
+          else return;
+
+          event.preventDefault();
+          const nextTab = tabs[(nextIndex + tabs.length) % tabs.length];
+          if (nextTab?.dataset.projectTab) activate(nextTab.dataset.projectTab, true);
+        });
+      });
+    });
+  }
+
+  initLabsProjects();
+  document.addEventListener('astro:page-load', initLabsProjects);
+</script>
+
+<style>
+  .labs-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 70px;
+  }
+
+  .labs-projects {
+    display: grid;
+    grid-template-columns: 370px minmax(0, 1fr);
+    gap: 20px;
+    width: 100%;
+    padding: 0 0 14px;
+    min-width: 0;
+  }
+
+  .labs-projects__stage {
+    grid-column: 2;
+    grid-row: 1;
+    height: 350px;
+    min-width: 0;
+    padding: 28px;
+    overflow: hidden;
+    background: var(--color-obsidian);
+    border-radius: var(--radius-cards);
+    color: var(--color-chalk);
+  }
+
+  .labs-projects__panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 14px;
+    height: 100%;
+    min-width: 0;
+  }
+
+  .labs-projects__panel[hidden] {
+    display: none;
+  }
+
+  .labs-projects__content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 230px;
+    align-items: start;
+    flex: 1;
+    gap: 24px;
+    min-height: 0;
+  }
+
+  .labs-projects__media {
+    grid-column: 2;
+    grid-row: 1;
+    width: 230px;
+    height: 230px;
+    overflow: hidden;
+    background: var(--color-obsidian);
+    border-radius: var(--radius-cards);
+  }
+
+  .labs-projects__panel[data-project-panel='personal-site'] .labs-projects__media {
+    background: var(--color-chalk);
+  }
+
+  .labs-projects__panel[data-project-panel='personal-site'] .labs-projects__image {
+    object-fit: cover;
+    object-position: left top;
+  }
+
+  .labs-projects__panel[data-project-panel='muse-lab'] .labs-projects__media {
+    background: #11130f;
+  }
+
+  .labs-projects__panel[data-project-panel='muse-lab'] .labs-projects__image {
+    object-fit: cover;
+    object-position: left top;
+  }
+
+  .labs-projects__panel[data-project-panel='asset-allocation'] .labs-projects__image {
+    object-fit: cover;
+    object-position: left top;
+  }
+
+  .labs-projects__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .labs-projects__copy {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .labs-projects__copy h2 {
+    margin: 0;
+    color: var(--color-chalk);
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+
+  .labs-projects__copy p {
+    max-width: 44ch;
+    margin: 14px 0 0;
+    color: color-mix(in srgb, var(--color-chalk) 72%, transparent);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+
+  .labs-projects__copy .labs-projects__intro {
+    max-width: 50ch;
+    margin-top: 0;
+    color: color-mix(in srgb, var(--color-chalk) 90%, transparent);
+    font-family: 'Source Han Sans SC', 'Source Han Sans CN', 'Noto Sans SC',
+      'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .labs-projects__copy .labs-projects__intro + .labs-projects__intro {
+    margin-top: 12px;
+  }
+
+  .labs-projects__highlights {
+    display: grid;
+    gap: 5px;
+    max-width: 50ch;
+    margin: 14px 0 0;
+    padding-left: 1.2em;
+    color: color-mix(in srgb, var(--color-chalk) 90%, transparent);
+    font-family: 'Source Han Sans SC', 'Source Han Sans CN', 'Noto Sans SC',
+      'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .labs-projects__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .labs-projects__button,
+  .labs-projects__status {
+    min-height: 40px;
+    padding: 10px 20px;
+    border-radius: var(--radius-pills);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .labs-projects__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid var(--color-chalk);
+    background: var(--color-chalk);
+    color: var(--color-obsidian);
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .labs-projects__button:hover {
+    border-color: var(--color-ember);
+    background: var(--color-ember);
+    color: var(--color-chalk);
+  }
+
+  .labs-projects__status {
+    width: fit-content;
+    margin: 0;
+    margin-left: auto;
+    border: 0;
+    background: var(--color-chalk);
+    color: var(--color-obsidian);
+  }
+
+  .labs-projects__tabs {
+    --tab-resize-duration: 300ms;
+    --tab-resize-easing: cubic-bezier(0.22, 1, 0.36, 1);
+    display: grid;
+    grid-template-rows: minmax(80px, 1fr) 64px 64px;
+    grid-column: 1;
+    grid-row: 1;
+    gap: 8px;
+    height: 350px;
+    min-width: 0;
+    transition: grid-template-rows var(--tab-resize-duration) var(--tab-resize-easing);
+    will-change: grid-template-rows;
+  }
+
+  .labs-projects__tabs:has(.labs-projects__tab:nth-child(2)[aria-selected='true']) {
+    grid-template-rows: 64px minmax(80px, 1fr) 64px;
+  }
+
+  .labs-projects__tabs:has(.labs-projects__tab:nth-child(3)[aria-selected='true']) {
+    grid-template-rows: 64px 64px minmax(80px, 1fr);
+  }
+
+  .labs-projects__tab {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 64px;
+    padding: 16px 24px;
+    border: 1px dashed var(--color-obsidian);
+    border-radius: var(--radius-cards);
+    background: transparent;
+    color: var(--color-obsidian);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: left;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .labs-projects__tab[aria-selected='true'] {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: var(--color-obsidian);
+    border-color: var(--color-obsidian);
+    border-style: solid;
+    color: var(--color-chalk);
+  }
+
+  .labs-projects__tab-title {
+    display: block;
+    font-size: 18px;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.35;
+  }
+
+  .labs-projects__tab:focus-visible {
+    outline: 3px solid var(--color-ember);
+    outline-offset: 3px;
+  }
+
+  .labs-podcast {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 370px;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  .labs-podcast::before {
+    position: absolute;
+    top: 100px;
+    right: 368px;
+    z-index: 0;
+    width: 27px;
+    height: 188px;
+    background: var(--color-limestone);
+    content: '';
+    pointer-events: none;
+  }
+
+  .labs-podcast__show,
+  .labs-podcast__episodes {
+    position: relative;
+    z-index: 1;
+    height: 370px;
+    margin: 0;
+    background: var(--color-limestone);
+    border-radius: var(--radius-cards);
+  }
+
+  .labs-podcast__show {
+    display: flex;
+    grid-column: 2;
+    grid-row: 1;
+    flex-direction: column;
+    gap: 16px;
+    padding: 56px 48px 48px;
+  }
+
+  .labs-podcast__show::before,
+  .labs-podcast__show::after {
+    position: absolute;
+    left: -20px;
+    z-index: 3;
+    width: 20px;
+    background: var(--color-pumice);
+    border-radius: var(--radius-pills);
+    content: '';
+    pointer-events: none;
+  }
+
+  .labs-podcast__show::before {
+    top: 56px;
+    height: 99px;
+  }
+
+  .labs-podcast__show::after {
+    bottom: 61px;
+    height: 88px;
+  }
+
+  .labs-podcast__show h2 {
+    margin: 0;
+    color: var(--color-obsidian);
+    font-family: 'MF Hao Ying', var(--font-display);
+    font-size: clamp(58px, 5.4vw, 68px);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 0.95;
+    white-space: nowrap;
+  }
+
+  .labs-podcast__show p {
+    margin: 16px 0 0;
+    color: var(--color-obsidian);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.55;
+  }
+
+  .labs-podcast__accent {
+    display: block;
+    width: 40px;
+    height: 4px;
+    margin-top: 36px;
+    background: var(--color-ember);
+    border-radius: var(--radius-buttons);
+  }
+
+  .labs-podcast__show-link {
+    margin-top: auto;
+    margin-bottom: 8px;
+    align-self: flex-end;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 43px;
+    padding: 12px 24px;
+    background: var(--color-obsidian);
+    border-radius: var(--radius-pills);
+    color: var(--color-chalk);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
+  }
+
+  .labs-podcast__show-link:hover {
+    background: var(--color-ember);
+    color: var(--color-chalk);
+    transform: translateY(-2px);
+  }
+
+  .labs-podcast__episodes {
+    display: grid;
+    grid-column: 1;
+    grid-row: 1;
+    align-content: center;
+    padding: 32px 48px;
+    list-style: none;
+  }
+
+  .labs-podcast__episodes li {
+    border-bottom: 1px dashed var(--color-obsidian);
+  }
+
+  .labs-podcast__episodes li:last-child {
+    border-bottom: 0;
+  }
+
+  .labs-podcast__vol {
+    padding-top: 4px;
+    color: var(--color-ember);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1.55;
+    white-space: nowrap;
+  }
+
+  .labs-podcast__episode-copy {
+    min-width: 0;
+  }
+
+  .labs-podcast__episode-copy h3 {
+    margin: 0;
+    overflow: hidden;
+    color: var(--color-obsidian);
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .labs-podcast__episode-copy p {
+    display: -webkit-box;
+    margin: 8px 0 0;
+    overflow: hidden;
+    color: color-mix(in srgb, var(--color-obsidian) 72%, transparent);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .labs-podcast__episode-link {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 20px;
+    width: 100%;
+    min-height: 101px;
+    padding: 24px 0;
+    color: var(--color-obsidian);
+    text-decoration: none;
+  }
+
+  .labs-podcast__episode-link h3,
+  .labs-podcast__episode-link p {
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .labs-podcast__episode-link:is(:hover, :focus-visible) h3,
+  .labs-podcast__episode-link:is(:hover, :focus-visible) p {
+    color: var(--color-ember);
+  }
+
+  .labs-podcast__episode-link:focus-visible {
+    border-radius: 8px;
+    outline: 3px solid var(--color-ember);
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 1100px) {
+    .labs-projects {
+      grid-template-columns: 320px minmax(0, 1fr);
+    }
+
+    .labs-projects__tab {
+      padding-right: 24px;
+      padding-left: 24px;
+    }
+  }
+
+  @media (max-width: 960px) {
+    .labs-layout {
+      gap: 56px;
+    }
+
+    .labs-projects {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .labs-projects__stage {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .labs-projects__tabs,
+    .labs-projects__tabs:has(.labs-projects__tab:nth-child(2)[aria-selected='true']),
+    .labs-projects__tabs:has(.labs-projects__tab:nth-child(3)[aria-selected='true']) {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: 1fr;
+      grid-column: 1;
+      grid-row: 2;
+      gap: 12px;
+      height: auto;
+    }
+
+    .labs-projects__tab,
+    .labs-projects__tab[aria-selected='true'] {
+      align-items: center;
+      flex: 0 0 auto;
+      flex-direction: row;
+      justify-content: flex-start;
+      min-height: 80px;
+    }
+
+    .labs-podcast {
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+    }
+
+    .labs-podcast__show {
+      padding-right: 34px;
+      padding-left: 34px;
+    }
+
+    .labs-podcast__episodes {
+      padding-right: 28px;
+      padding-left: 28px;
+    }
+
+    .labs-podcast__episode-link {
+      grid-template-columns: 54px minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .labs-projects__stage {
+      height: auto;
+      min-height: 0;
+      padding: 24px;
+      border-radius: 32px;
+    }
+
+    .labs-projects__panel {
+      gap: 24px;
+    }
+
+    .labs-projects__content {
+      grid-template-columns: minmax(0, 1fr);
+      flex: none;
+      gap: 20px;
+    }
+
+    .labs-projects__media {
+      grid-column: 1;
+      grid-row: 1;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      border-radius: 28px;
+    }
+
+    .labs-projects__copy {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .labs-projects__tabs,
+    .labs-projects__tabs:has(.labs-projects__tab:nth-child(2)[aria-selected='true']),
+    .labs-projects__tabs:has(.labs-projects__tab:nth-child(3)[aria-selected='true']) {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: repeat(3, auto);
+    }
+
+    .labs-projects__tab,
+    .labs-projects__tab[aria-selected='true'] {
+      min-height: 68px;
+      padding: 16px 20px;
+      border-radius: 28px;
+    }
+
+    .labs-podcast {
+      grid-template-columns: 1fr;
+    }
+
+    .labs-podcast__show {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .labs-podcast__episodes {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .labs-podcast__show,
+    .labs-podcast__episodes {
+      height: auto;
+      min-height: 320px;
+    }
+
+    .labs-podcast::before,
+    .labs-podcast__show::before,
+    .labs-podcast__show::after {
+      display: none;
+    }
+
+    .labs-podcast__episodes {
+      min-height: 0;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .labs-layout {
+      gap: 42px;
+    }
+
+    .labs-projects__stage {
+      padding: 20px;
+    }
+
+    .labs-projects__media {
+      border-radius: 24px;
+    }
+
+    .labs-projects__copy h2 {
+      font-size: 22px;
+    }
+
+    .labs-projects__copy p {
+      font-size: 15px;
+    }
+
+    .labs-projects__actions {
+      justify-content: flex-start;
+    }
+
+    .labs-projects__button,
+    .labs-projects__status {
+      padding-right: 20px;
+      padding-left: 20px;
+      font-size: 15px;
+    }
+
+    .labs-projects__status {
+      margin-left: 0;
+    }
+
+    .labs-projects__tabs {
+      gap: 10px;
+    }
+
+    .labs-projects__tab,
+    .labs-projects__tab[aria-selected='true'] {
+      min-height: 68px;
+      font-size: 18px;
+    }
+
+    .labs-podcast__show {
+      min-height: 300px;
+      padding: 44px 32px 36px;
+      border-radius: 32px;
+    }
+
+    .labs-podcast__show-link {
+      margin-bottom: 0;
+    }
+
+    .labs-podcast__show h2 {
+      font-size: 58px;
+    }
+
+    .labs-podcast__episodes {
+      padding: 20px 24px;
+      border-radius: 32px;
+    }
+
+    .labs-podcast__episode-link {
+      grid-template-columns: 1fr;
+      gap: 8px;
+      min-height: 0;
+      padding: 20px 0;
+    }
+
+    .labs-podcast__episode-copy h3 {
+      white-space: normal;
+    }
+
+    .labs-podcast__episode-copy p {
+      -webkit-line-clamp: 2;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .labs-projects__tabs,
+    .labs-projects__tab,
+    .labs-projects__button,
+    .labs-podcast__episode-link h3,
+    .labs-podcast__show-link {
+      transition: none;
+    }
+  }
+</style>

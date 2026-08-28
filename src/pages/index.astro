@@ -3,17 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteNav from '../components/SiteNav.astro';
 import TimelineNav from '../components/TimelineNav.astro';
 import TimelineSection from '../components/TimelineSection.astro';
-import ResumeBlock from '../components/ResumeBlock.astro';
-import ProjectList from '../components/ProjectList.astro';
-import WorkflowSteps from '../components/WorkflowSteps.astro';
-import VibeGrid from '../components/VibeGrid.astro';
+import IntroBlock from '../components/IntroBlock.astro';
+import PortfolioGrid from '../components/PortfolioGrid.astro';
 import ContactForm from '../components/ContactForm.astro';
-import { aboutSection } from '../data/about';
 import { contactSection } from '../data/contact';
-import { resume } from '../data/resume';
-import { workProjects } from '../data/work';
-import { workflow } from '../data/workflow';
-import { vibeProjects } from '../data/vibe';
 import { timelineSections } from '../data/timeline';
 import { withBase } from '../lib/paths';
 
@@ -40,7 +33,10 @@ const portraitSrc = withBase('/chen-portrait.png?v=3');
         <span class="hero__brand-line hero__brand-line--name">Chen’s</span>
         <span class="hero__brand-line hero__brand-line--title">AI Exploration</span>
       </h1>
-      <p class="hero__tagline">在工作内外的时间里，探索 AI 时代的各种可能性。</p>
+      <p class="hero__tagline">
+        <span>Exploring how AI changes the products we create and the way we create</span>
+        <span>AI 如何改变我们创造的东西，和创造它们的方式</span>
+      </p>
     </div>
   </header>
 
@@ -53,65 +49,33 @@ const portraitSrc = withBase('/chen-portrait.png?v=3');
       <TimelineSection
         id="resume"
         index="01"
-        title="About"
+        title="Intro"
         titleTransform="capitalize"
         surface="panel"
-        lead="一个好奇心很强的人。"
         accentBar={true}
-        ctaLabel={aboutSection.ctaLabel}
-        ctaHref={aboutSection.ctaHref}
       >
-        <ResumeBlock resume={resume} />
+        <IntroBlock />
       </TimelineSection>
 
       <TimelineSection
-        id="work"
+        id="portfolios"
         index="02"
-        title="AI Exploration In E-Commerce"
-        titleTransform="none"
-        surface="panel"
-        tone="dark"
-        lead="电商业务中的 AI 探索：如何将 AI 能力嵌入到消费者的日常购物路径中。"
-        leadMedium={true}
-        accentBar={true}
-        contentGap={32}
-      >
-        <ProjectList projects={workProjects} />
-      </TimelineSection>
-
-      <TimelineSection
-        id="workflow"
-        index="03"
-        title="Design To Code Workflow"
+        title="Traditional Portfolios"
         titleTransform="capitalize"
         surface="flush"
-        lead="如何通过 vibe coding 重塑上下游协同方式，提升生产效率"
+        lead="在AI时代之前的一些作品集"
         leadMedium={true}
         accentBar={true}
         contentGap={32}
       >
-        <WorkflowSteps workflow={workflow} />
-      </TimelineSection>
-
-      <TimelineSection
-        id="vibe"
-        index="04"
-        title="Vibe Coding"
-        titleTransform="capitalize"
-        surface="flush"
-        lead="周末与碎片时间里，用对话把想法敲成可运行的小东西。"
-        leadMedium={true}
-        contentGap={32}
-        accentBar={true}
-      >
-        <VibeGrid projects={vibeProjects} />
+        <PortfolioGrid />
       </TimelineSection>
 
       <section class="contact-section" id="contact" aria-labelledby="contact-title">
         <div class="contact-section__panel" data-reveal>
           <header class="contact-section__header">
             <div class="contact-section__index">
-              <span class="tag">05</span>
+              <span class="tag">03</span>
             </div>
             <h2 class="contact-section__title" id="contact-title">Contact me</h2>
             <p class="contact-section__lead">{contactSection.lead}</p>
@@ -184,9 +148,22 @@ const portraitSrc = withBase('/chen-portrait.png?v=3');
     line-height: 1.06;
   }
 
+  .hero__brand-line--title::after {
+    content: '';
+    display: inline-block;
+    width: 0.18em;
+    height: 0.18em;
+    margin-left: 0.08em;
+    border-radius: 50%;
+    background: var(--color-ember);
+  }
+
   .hero__tagline {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     margin: var(--spacing-24) 0 0;
-    max-width: 448px;
+    max-width: 36em;
     padding-top: 6px;
     font-size: var(--text-body);
     font-weight: var(--font-weight-medium);

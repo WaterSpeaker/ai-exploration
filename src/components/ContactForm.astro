@@ -220,16 +220,18 @@ const avatarSrc = withBase('/chen-avatar-contact.png');
     padding: 0;
     border: none;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--color-chalk) 16%, transparent);
+    background: transparent;
     color: var(--color-chalk);
     cursor: pointer;
+    opacity: 0.55;
     transition:
       background-color 0.2s ease,
       opacity 0.2s ease;
   }
 
   .contact-copy__icon-btn:hover {
-    background: color-mix(in srgb, var(--color-chalk) 28%, transparent);
+    background: color-mix(in srgb, var(--color-chalk) 16%, transparent);
+    opacity: 1;
   }
 
   .contact-copy__icon-btn:focus-visible {

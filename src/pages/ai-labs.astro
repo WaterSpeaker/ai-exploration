@@ -1,0 +1,210 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteNav from '../components/SiteNav.astro';
+import LabsBoard from '../components/LabsBoard.astro';
+---
+
+<BaseLayout
+  title="AI Labs · Chen's AI Exploration"
+  description="试着做一点能点开的东西，再写成文、拿去聊。"
+>
+  <a class="skip-link" href="#labs-board">跳到内容</a>
+  <SiteNav active="labs" />
+
+  <header class="labs-hero site-shell">
+    <h1 class="labs-hero__title">
+      AI Labs<span class="labs-hero__dot" aria-hidden="true"></span>
+    </h1>
+  </header>
+
+  <main class="labs site-shell">
+    <LabsBoard />
+  </main>
+
+  <footer class="footer site-shell">
+    <hr class="divider-dotted" />
+    <p>© {new Date().getFullYear()} Chen WANG</p>
+  </footer>
+</BaseLayout>
+
+<script>
+  function initLabsReveal() {
+    const revealables = document.querySelectorAll<HTMLElement>('[data-reveal]');
+    if (revealables.length === 0) return;
+    if (document.documentElement.classList.contains('reveal-ready')) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) {
+      revealables.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -6% 0px' },
+    );
+
+    const initiallyVisible: HTMLElement[] = [];
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    revealables.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < vh * 0.94 && rect.bottom > vh * 0.06) {
+        initiallyVisible.push(el);
+      } else {
+        revealObserver.observe(el);
+      }
+    });
+
+    document.documentElement.classList.add('reveal-ready');
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        initiallyVisible.forEach((el) => el.classList.add('is-visible'));
+      });
+    });
+  }
+
+  initLabsReveal();
+  document.addEventListener('astro:page-load', initLabsReveal);
+</script>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: var(--spacing-16);
+    top: -3rem;
+    z-index: 100;
+    padding: var(--spacing-8) var(--spacing-16);
+    background: var(--color-obsidian);
+    color: var(--color-chalk);
+    border-radius: var(--radius-pills);
+    text-decoration: none;
+    transition: top 0.2s ease;
+  }
+
+  .skip-link:focus {
+    top: var(--spacing-16);
+  }
+
+  .labs-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
+    gap: var(--spacing-40);
+    align-items: end;
+    padding: clamp(var(--spacing-56), 8vw, var(--spacing-92)) 0
+      clamp(var(--spacing-64), 8vw, 112px);
+    animation: labs-hero-in 0.9s var(--ease-out) both;
+  }
+
+  .labs-hero__title {
+    margin: 0;
+    font-size: clamp(64px, 10vw, 128px);
+    line-height: 0.82;
+    letter-spacing: var(--tracking-heading);
+    text-transform: none;
+  }
+
+  .labs-hero__dot {
+    display: inline-block;
+    width: 0.18em;
+    height: 0.18em;
+    margin-left: 0.08em;
+    border-radius: 50%;
+    background: var(--color-ember);
+    pointer-events: none;
+    animation: labs-dot-roll-in 3.4s cubic-bezier(0.45, 0, 0.55, 1) 0.85s 1;
+  }
+
+  .labs {
+    padding-bottom: var(--section-gap);
+  }
+
+  .footer {
+    padding-bottom: var(--spacing-56);
+    text-align: center;
+  }
+
+  .footer p {
+    margin: 0;
+    font-family: var(--font-caption);
+    font-size: var(--text-caption);
+    opacity: 0.55;
+  }
+
+  @keyframes labs-hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--spacing-20));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes labs-dot-roll-in {
+    0% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    14% {
+      transform: translate3d(0.4em, 0, 0) rotate(180deg);
+    }
+    28% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    41% {
+      transform: translate3d(0.34em, 0, 0) rotate(153deg);
+    }
+    53% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    64% {
+      transform: translate3d(0.28em, 0, 0) rotate(126deg);
+    }
+    74% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    83% {
+      transform: translate3d(0.21em, 0, 0) rotate(95deg);
+    }
+    90% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    95% {
+      transform: translate3d(0.12em, 0, 0) rotate(54deg);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .labs-hero {
+      animation: none;
+    }
+
+    .labs-hero__dot {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .labs-hero {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-24);
+      padding: var(--spacing-56) 0 var(--spacing-64);
+    }
+
+    .labs-hero__title {
+      font-size: clamp(64px, 23vw, 96px);
+    }
+
+  }
+</style>
