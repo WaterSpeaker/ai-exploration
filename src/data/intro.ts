@@ -96,7 +96,16 @@ export const introGroups: IntroGroup[] = [
             text: '🔗 Muse — Vibe Coding 灵感生成器',
             href: 'https://muse-lab-vibe.vercel.app/',
           },
-          { text: '、个人资产管理工具(搭建中) ' },
+          { text: '、' },
+          {
+            text: '🔗个人资产管理工具',
+            href: pick<string | undefined>({
+              internal:
+                'https://bytedance.my.larkoffice.com/docx/DiVAdTeofoWjxVxciZOmTEiryGc?from=space_personal_filelist&pre_pathname=%2Fdrive%2Fme%2F&previous_navigation_time=1788254815318',
+              external:
+                'https://waterspeaker.github.io/AboutMe/blog/vibe-coding-asset-plan/',
+            }),
+          },
         ],
       },
     ],

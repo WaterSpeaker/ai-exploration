@@ -10,7 +10,7 @@ export type PortfolioItem = {
 export const portfolioItems: PortfolioItem[] = [
   {
     year: 'GEC',
-    href: withBase('/portfolios/chen-wang-portfolio-gec-web.pdf'),
+    href: withBase('/portfolios/chen-wang-portfolio-gec-web.pdf?v=2'),
     image: withBase('/portfolios/portfolio-gec-cover.jpg?v=1'),
     alt: '王琛 GEC Portfolio',
   },
