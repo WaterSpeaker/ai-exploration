@@ -47,7 +47,7 @@
 
 | id | surface | diff_type | internal | external | status | code_path |
 |----|---------|-----------|----------|----------|--------|-----------|
-| `url.lark.about-me` | About CTA | `rewrite` | 飞书简历文档 | `/chen-wang-resume.pdf`（王琛_简历.pdf） | `implemented` | `src/data/about.ts` |
+| `url.resume.about-me` | About CTA | `same` | `/chen-wang-resume.pdf?v=20260914`（Resume - 王琛.pdf） | `/chen-wang-resume.pdf?v=20260914`（Resume - 王琛.pdf） | `implemented` | `src/data/about.ts` |
 | `url.muse-lab` | Vibe card / Labs experiment | `same` | Muse Lab vercel 链接 | Muse Lab vercel 链接 | `implemented` | `src/data/vibe.ts` · `src/data/labs.ts` |
 | `url.lark.design-weekly` | Vibe card / Labs tool | `hide`（仅链接） | 保留飞书链接 | 保留卡片，无链接 | `implemented` | `src/data/vibe.ts` · `src/data/labs.ts` |
 | `url.lark.personal-site-article` | Labs experiment | `hide`（仅链接） | 飞书「如何手搓个人网站」 | 保留卡，无文章 CTA | `implemented` | `src/data/labs.ts` |
@@ -80,7 +80,7 @@
 
 1. Work：对内飞书、对外 HTML — **已落地**
 2. 三篇 HTML：先用现文件，后续审核脱敏 — **已落地（待审核）**
-3. 对外 More about me → `https://waterspeaker.github.io/AboutMe/` — **已落地**
+3. 对内、对外「完整简历」统一指向 `/chen-wang-resume.pdf?v=20260914` — **已落地**
 4. Vibe 后两张卡：对外保留卡片、去掉链接 — **已落地**
 5. Workflow 两条内网 CTA（配置指南 / TTS skill）：对外隐藏 — **已落地**
 6. Contact：对外去掉飞书，改为微信/邮箱点击复制 — **已落地**

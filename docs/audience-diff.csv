@@ -5,7 +5,7 @@ work.tag.tts-lang,work chip,replace,https://bytedance.my.larkoffice.com/docx/ALd
 doc.ai-shopping-chatbot-design,work doc,external_only,不产出站内页,现有 HTML（待脱敏审核）,implemented,src/pages/work/[slug].astro,internal build 无 /work/*
 doc.ai-design-opportunities,work doc,external_only,不产出站内页,现有 HTML（待脱敏审核）,implemented,src/pages/work/[slug].astro,后续审核脱敏
 doc.tts-ai-design-language,work doc,external_only,不产出站内页,现有 HTML（待脱敏审核）,implemented,src/pages/work/[slug].astro,后续审核脱敏
-url.lark.about-me,About CTA,rewrite,https://bytedance.larkoffice.com/docx/YZljdzO2HorQqqxqbduc6SnanVh,/chen-wang-resume.pdf,implemented,src/data/about.ts,源文件：王琛_简历.pdf
+url.resume.about-me,About CTA,same,/chen-wang-resume.pdf?v=20260914,/chen-wang-resume.pdf?v=20260914,implemented,src/data/about.ts,源文件：Resume - 王琛.pdf
 url.aime.event-bot,Vibe card,hide,https://edb246c054dc.aime-app.bytedance.net/,保留卡片无链接,implemented,src/data/vibe.ts,对外去链接
 url.lark.design-weekly,Vibe card / Labs tool,hide,https://bytedance.larkoffice.com/docx/Sa48di26BoBaPsxpy6AclSvNnFc,保留卡片无链接,implemented,src/data/vibe.ts;src/data/labs.ts,对外去链接
 url.lark.personal-site-article,Labs experiment,hide,https://bytedance.my.larkoffice.com/docx/D5JXd5MbKo75GWxo5AdmVUaJy2e,保留卡无文章CTA,implemented,src/data/labs.ts,对外去文章链接
