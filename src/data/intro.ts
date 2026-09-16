@@ -106,6 +106,16 @@ export const introGroups: IntroGroup[] = [
                 'https://waterspeaker.github.io/AboutMe/blog/vibe-coding-asset-plan/',
             }),
           },
+          { text: '、' },
+          {
+            text: '🔗AI passport演讲提词器',
+            href: pick({
+              internal:
+                'https://bytedance.my.larkoffice.com/docx/Pl5Ydb9c4owWjzx5QAgm3UwBykb',
+              external:
+                'https://waterspeaker.github.io/AboutMe/blog/ai-passport-teleprompter/',
+            }),
+          },
         ],
       },
     ],
