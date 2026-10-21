@@ -80,10 +80,15 @@ export const introGroups: IntroGroup[] = [
           {
             text: '利用 AI 搭建团队提效工具与工作流：开发自动化 Skill 用于核心项目分享，单次节省约 30min；沉淀 ',
           },
-          {
-            text: '🔗 设计师 0-1 Vibe Coding 环境配置指南',
-            href: 'https://bytedance.larkoffice.com/docx/ArjzdltPbom1oqxHe0vcvzZ3nqc',
-          },
+          pick({
+            internal: {
+              text: '🔗 设计师 0-1 Vibe Coding 环境配置指南',
+              href: 'https://bytedance.larkoffice.com/docx/ArjzdltPbom1oqxHe0vcvzZ3nqc',
+            },
+            external: {
+              text: '《设计师 0-1 Vibe Coding 环境配置指南》',
+            },
+          }),
           { text: '，降低设计师自主开发的启动门槛' },
         ],
       },
