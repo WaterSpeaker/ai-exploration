@@ -83,6 +83,14 @@ function markHref(mark: IntroMark) {
 <WorkflowLayersPanel />
 
 <style>
+  /* Reveal transforms create stacking contexts; lift the containing panel too. */
+  :global(.timeline-section__panel:has(.intro__qr:hover)),
+  :global(.timeline-section__panel:has(.intro__qr:focus-within)),
+  :global(.timeline-section__panel:has(.intro__qr[open])) {
+    position: relative;
+    z-index: 100;
+  }
+
   .intro {
     display: grid;
     gap: 36px;
