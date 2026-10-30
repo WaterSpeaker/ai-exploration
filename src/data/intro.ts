@@ -6,6 +6,7 @@ export type IntroMark = {
   text: string;
   href?: string;
   panel?: 'workflow-layers';
+  qrImage?: string;
   /** Ember color without underline (e.g. 完整简历) */
   quiet?: boolean;
 };
@@ -120,6 +121,11 @@ export const introGroups: IntroGroup[] = [
               external:
                 'https://waterspeaker.github.io/AboutMe/blog/ai-passport-teleprompter/',
             }),
+          },
+          { text: '、' },
+          {
+            text: '🔗Codex 重置提醒助手',
+            qrImage: withBase('/images/projects/codex-reset-group.png'),
           },
         ],
       },

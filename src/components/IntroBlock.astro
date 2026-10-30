@@ -24,6 +24,16 @@ function markHref(mark: IntroMark) {
                 <span class="intro__text">
                   {row.marks.map((mark) => {
                     const href = markHref(mark);
+                    if (mark.qrImage) {
+                      return (
+                        <details class="intro__qr">
+                          <summary class="intro__link">{mark.text}</summary>
+                          <span class="intro__qr-card">
+                            <img src={mark.qrImage} alt="Codex 重置提醒助手飞书群二维码，仅限企业内部成员加入" width="1372" height="1392" loading="lazy" />
+                          </span>
+                        </details>
+                      );
+                    }
                     if (mark.panel) {
                       return (
                         <button
@@ -163,6 +173,49 @@ function markHref(mark: IntroMark) {
   .intro__link--quiet {
     text-decoration: none;
     font-weight: var(--font-weight-medium);
+  }
+
+  .intro__qr {
+    position: relative;
+    display: inline-block;
+  }
+
+  .intro__qr summary {
+    display: inline;
+    list-style: none;
+  }
+
+  .intro__qr summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .intro__qr-card {
+    display: none;
+    position: absolute;
+    z-index: 30;
+    right: 0;
+    top: 100%;
+    width: min(300px, 80vw);
+    padding-top: 10px;
+  }
+
+  .intro__qr:hover > .intro__qr-card,
+  .intro__qr:focus-within > .intro__qr-card,
+  .intro__qr[open] > .intro__qr-card {
+    display: block;
+  }
+
+  .intro__qr:hover::details-content,
+  .intro__qr:focus-within::details-content {
+    content-visibility: visible;
+  }
+
+  .intro__qr-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgb(0 0 0 / 18%);
   }
 
   @media (max-width: 640px) {
